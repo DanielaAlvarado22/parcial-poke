@@ -1,7 +1,7 @@
 //import axios from 'axios';
 import React from 'react'
 import './App.css';
-import getPokeName from './pokePromise';
+import GetPoke from './pokePromise';
 
 
 
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
     
         <p>
-          {getPokeName()}
+          {GetPoke()}
         </p>
        
       
