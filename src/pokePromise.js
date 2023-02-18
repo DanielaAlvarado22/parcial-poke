@@ -1,30 +1,56 @@
 import React from "react";
 import { useId, useState, useEffect } from "react";
 import { reqPokeApi, wait2SecondsAsync } from "./pokeapi";
+//#region url imgs
+const pokeball = 'https://preview.redd.it/iaj86isx9b171.jpg?auto=webp&s=afb915308c3d60a5fec735e03cfdab9ca249ade0'
 
+//#endregion
 function GetPoke() {
     const [wait, setWait] = useState('waiting...')
     const [poke, setPoke] = useState('')
     const [pokeName, setPokeName] = useState('...')
     const [pokeTypes, setPokeTypes] = useState([])
+    const [pokeDesc, setPokeDesc] = useState('...')
     const [pokeData, setPokeData] = useState([])
+    const [pokeImg, setPokeImg] = useState(pokeball)
     const id = useId
-
+    
     const waitPlease = async (showError) => {
         try{
             const res = await wait2SecondsAsync(showError)
             setWait(`${res}`)
         } catch(error){ setWait(`catching error... ${error}`)}
         try{
-            const {data:{name: name}} = await reqPokeApi.get(`/pokemon/${poke}`)
+            //Obteniendo el nombre del pokemon
+            const {data:{name}} = await reqPokeApi.get(`/pokemon/${poke}`)
             setPokeName(name)
-            /* const {data: {types:types}} = await reqPokeApi.get(`/pokemon/${poke}`)
-            setPokeTypes(types) */
-            //const {data} = await reqPokeApi.get(`/pokemon-species/${poke}`)
+            //Obteniendo su tipo o tipos
+            const {data: {types}} = await reqPokeApi.get(`/pokemon/${poke}`)
+            if(types.length<2){
+                const {0: {type: {name}}} = types
+                setPokeTypes(name)
+            }else{
+                const {0: {type: {name}}, 1:{type:{name:name2}}} = types
+                setPokeTypes( `${name}, ${name2}`)
+            }
+            
+            const {data: {sprites: {front_default}}} = await reqPokeApi.get(`/pokemon/${poke}`)
+            setPokeImg(front_default)
+
+            /* const {data: {flavor_text_entries: {6: {flavor_text}}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
+            setPokeDesc(flavor_text) */
+            const {data: {flavor_text_entries}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
+            const {flavor_text} = flavor_text_entries.find(({language: {name}})=> name==='es')
+            setPokeDesc(flavor_text)
+
             const {data:{evolution_chain: {url: evo_url}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
             const {data} = await reqPokeApi.get(evo_url)
             setPokeData(data)
-        }catch({message}){ setPokeData(message)}
+        }catch({message}){ 
+            setPokeData(message)
+            setPokeTypes()
+            setPokeImg(pokeball)
+        }
     }
 
      useEffect(()=>{
@@ -52,8 +78,6 @@ function GetPoke() {
                     <legend>Search your Poke</legend>
                     <label htmlFor="poke">Enter Poke name or ID
                         <input
-                    
-
                             id={id}
                             type='text'
                             placeholder='name or id'
@@ -61,13 +85,16 @@ function GetPoke() {
                             onInput={e => setPoke(e.target.value)}
                         />
                     </label>
-                    <button type='submit'>Reset</button>
+                    
                 </fieldset>
             </form>
             <p> {wait} </p>
+            <img src={pokeImg} alt='Pokemon sprite...'
+            ></img>
             <p> Pokemon's name: {pokeName} </p>
-            {/* <p> Pokemon's type: {pokeTypes} </p> */}
-            <p>{JSON.stringify(pokeData)}</p>
+            <p> Pokemon's type: {JSON.stringify(pokeTypes)} </p>
+            <p> {JSON.stringify(pokeDesc)} </p>
+            <p>{JSON.stringify(pokeData, null, 2)}</p>
             
         </div>
     )
