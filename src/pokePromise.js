@@ -37,8 +37,7 @@ function GetPoke() {
             const {data: {sprites: {front_default}}} = await reqPokeApi.get(`/pokemon/${poke}`)
             setPokeImg(front_default)
 
-            /* const {data: {flavor_text_entries: {6: {flavor_text}}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
-            setPokeDesc(flavor_text) */
+            //obteniendo descripcion en espeanol
             const {data: {flavor_text_entries}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
             const {flavor_text} = flavor_text_entries.find(({language: {name}})=> name==='es')
             setPokeDesc(flavor_text)
