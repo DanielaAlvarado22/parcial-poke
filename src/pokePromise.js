@@ -1,6 +1,7 @@
 import React from "react";
 import { useId, useState, useEffect } from "react";
 import { reqPokeApi, wait2SecondsAsync } from "./pokeapi";
+import  classes from "../src/App.css";
 
 function GetPoke() {
     const [wait, setWait] = useState('waiting...')
@@ -51,15 +52,18 @@ function GetPoke() {
                 <fieldset>
                     <legend>Search your Poke</legend>
                     <label htmlFor="poke">Enter Poke name or ID
-                        <input
-                    
-
+                    <div >
+                    <input
+                            
+                            className={classes.inputBox}
                             id={id}
                             type='text'
                             placeholder='name or id'
                             value={poke}
-                            onInput={e => setPoke(e.target.value)}
-                        />
+                            onInput={e => setPoke(e.target.value)}/>
+
+                    </div>
+                        
                     </label>
                     <button type='submit'>Reset</button>
                 </fieldset>
