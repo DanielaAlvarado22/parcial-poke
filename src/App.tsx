@@ -91,20 +91,17 @@ function App() {
           }
           evolutionChainData.push(slaveChain2)
           let third = second[0].evolves_to
-          if(third.species){
-            
+          if(third.length>0){
             let thirdName = third[0].species.name
-            if(thirdName){
-              const { data:{types} } = await reqPokeApi.get(`/pokemon/${thirdName}`)
-              const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
-              const slaveChain3: evolutionChain ={
-                name:thirdName,
-                type: typesNames
-              }
-              evolutionChainData.push(slaveChain3)
+            const { data:{types} } = await reqPokeApi.get(`/pokemon/${thirdName}`)
+            const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
+            const slaveChain3: evolutionChain ={
+              name:thirdName,
+              type: typesNames
             }
-            
+            evolutionChainData.push(slaveChain3)
           }
+         
           
         }
         
