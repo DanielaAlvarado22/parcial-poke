@@ -25,7 +25,7 @@ export interface damageData{
 
 export interface evolutionChain {
     name: string,
-    type: Array<pokeType>
+    type: Array<string>
 }
 
 
@@ -47,13 +47,13 @@ export const chainToPretty = (chain: evolutionChain)=>{
     if(chain.type.length<2){
         return(
         `
-            ${chain.name} - ${chain.type[0].name}
+            ${chain.name} - ${chain.type[0]}
         `
     )
     }else{
         return(
         `
-            ${chain.name} - ${chain.type[0].name}, ${chain.type[1].name}
+            ${chain.name} - ${chain.type[0]}, ${chain.type[1]}
         `)
     }
     

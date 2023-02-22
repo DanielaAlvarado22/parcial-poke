@@ -70,30 +70,40 @@ function App() {
         const {evolution_chain:{url:evo_url}} = dataSpecies
         const {data:{chain}} = await reqPokeApi.get(evo_url)
         let first = chain.species.name
+        
         if(first){
+          const { data:{types} } = await reqPokeApi.get(`/pokemon/${first}`)
+          const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
           const slaveChain: evolutionChain ={
             name:first,
-            type: pokeTypesData
+            type: typesNames
           }
           evolutionChainData.push(slaveChain)
         }
-        
         let second = chain.evolves_to
         if(second[0]){
           let secondName = second[0].species.name
+          const { data:{types} } = await reqPokeApi.get(`/pokemon/${secondName}`)
+          const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
           const slaveChain2: evolutionChain ={
             name:secondName,
-            type: pokeTypesData
+            type: typesNames
           }
           evolutionChainData.push(slaveChain2)
           let third = second[0].evolves_to
-          if(third){
+          if(third.species){
+            
             let thirdName = third[0].species.name
-            const slaveChain3: evolutionChain ={
-              name:thirdName,
-              type: pokeTypesData
+            if(thirdName){
+              const { data:{types} } = await reqPokeApi.get(`/pokemon/${thirdName}`)
+              const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
+              const slaveChain3: evolutionChain ={
+                name:thirdName,
+                type: typesNames
+              }
+              evolutionChainData.push(slaveChain3)
             }
-            evolutionChainData.push(slaveChain3)
+            
           }
           
         }
@@ -116,7 +126,12 @@ function App() {
         setPokeMoves(JSON.stringify(orderedNamesMoves, null, 2))
       }
     } catch ({ message }) { 
-      setPokeName(message)
+      setWait(message)
+      setPokeSprite(pokeball)
+      setPokeName("")
+      setPokeText("")
+      setPokeTypes([""])
+      setPokeDamageData([""])
       setEvoChain([""])
       setPokeMoves("")
       }
