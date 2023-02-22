@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from 'axios'
 
-export const wait2SecondsAsync = async (showError = false) => {
-    const promiseTest: Promise<String> = new Promise((resolve, reject) => {
-        setTimeout(() => !showError ? resolve('Process finished') : reject('Process error'), 2000);
+export const wait2SecondsAsync = async () => {
+    const promiseTest: Promise<string> = new Promise((resolve, reject) => {
+        setTimeout(() =>  resolve('Process finished'), 2000);
     });
     return promiseTest;
 };
