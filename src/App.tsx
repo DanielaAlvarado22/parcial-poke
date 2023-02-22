@@ -40,7 +40,7 @@ function App() {
         const { name, sprites: { front_default }, types, moves } = data
         //obteniendo tipos
         const typesNames: string[] = types.map((poke: { type: { name: string } }) => poke.type.name)
-
+        
         typesNames.forEach(async type => {
           const { data: { damage_relations: { no_damage_to, half_damage_to, double_damage_to, double_damage_from } } } = await reqPokeApi.get(`/type/${type}`)
           const damageData: damageData = {
@@ -63,34 +63,63 @@ function App() {
         })
         const orderedNamesMoves = orderedMoves.map((poke: { move: { name: string } }) => poke.move.name)
 
-        //Obteniendo datos de especie
         const { data: dataSpecies } = await reqPokeApi.get(`/pokemon-species/${inputPoke}`)
-        //Deconstruyendo descripciones
         const { flavor_text_entries } = dataSpecies
-        //Buscando descripcion en ESP
-        const { flavor_text } = flavor_text_entries.find((desc: { language: { name: string } }) => desc.language.name == 'es')
+        const { flavor_text } = flavor_text_entries.find((desc: { language: { name: string } }) => desc.language.name === 'es')
 
         const {evolution_chain:{url:evo_url}} = dataSpecies
         const {data:{chain}} = await reqPokeApi.get(evo_url)
-        const {species:{name: nameSp}} = chain
-        //const {species} = evolves_to.map( (species:{name:string})=>species.name)
-        const slaveChain: evolutionChain ={
-          name:nameSp,
-          type: pokeTypesData
+        let first = chain.species.name
+        if(first){
+          const slaveChain: evolutionChain ={
+            name:first,
+            type: pokeTypesData
+          }
+          evolutionChainData.push(slaveChain)
         }
-        evolutionChainData.push(slaveChain)
-
+        
+        let second = chain.evolves_to
+        if(second[0]){
+          let secondName = second[0].species.name
+          const slaveChain2: evolutionChain ={
+            name:secondName,
+            type: pokeTypesData
+          }
+          evolutionChainData.push(slaveChain2)
+          let third = second[0].evolves_to
+          if(third){
+            let thirdName = third[0].species.name
+            const slaveChain3: evolutionChain ={
+              name:thirdName,
+              type: pokeTypesData
+            }
+            evolutionChainData.push(slaveChain3)
+          }
+          
+        }
+        
         setPokeName(JSON.stringify(name))
         setPokeSprite(front_default)
         setPokeText(flavor_text)
         setPokeTypes(typesNames)
         typesNames.length < 2 ? setPokeDamageData([toPretty(pokeTypesData[0])]) : setPokeDamageData([toPretty(pokeTypesData[0]), toPretty(pokeTypesData[1])])
-
-        setEvoChain([chainToPretty(evolutionChainData[0])])
+        if(evolutionChainData.length===1){
+          setEvoChain([chainToPretty(evolutionChainData[0])])
+        }
+        if(evolutionChainData.length===2){
+          setEvoChain([chainToPretty(evolutionChainData[0]),chainToPretty(evolutionChainData[1])])
+        }
+        if(evolutionChainData.length===3){
+        setEvoChain([chainToPretty(evolutionChainData[0]),chainToPretty(evolutionChainData[1]),chainToPretty(evolutionChainData[2])])
+        }
 
         setPokeMoves(JSON.stringify(orderedNamesMoves, null, 2))
       }
-    } catch ({ message }) { setPokeName(message) }
+    } catch ({ message }) { 
+      setPokeName(message)
+      setEvoChain([""])
+      setPokeMoves("")
+      }
 
   }
 

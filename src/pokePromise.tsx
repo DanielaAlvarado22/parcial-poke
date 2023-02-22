@@ -28,6 +28,8 @@ export interface evolutionChain {
     type: Array<pokeType>
 }
 
+
+
 export const toPretty = (pokeType: pokeType)=>{
     return(
       `
