@@ -13,6 +13,7 @@ function GetPoke() {
     const [pokeDesc, setPokeDesc] = useState('...')
     const [pokeData, setPokeData] = useState([])
     const [pokeImg, setPokeImg] = useState(pokeball)
+    const [pokeMoves, setPokeMoves] = useState([])
     const id = useId
     
     const waitPlease = async (showError) => {
@@ -44,6 +45,11 @@ function GetPoke() {
 
             const {data:{evolution_chain: {url: evo_url}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
             const {data} = await reqPokeApi.get(evo_url)
+
+            const {data: {moves}} = await reqPokeApi.get((`/pokemon/${poke}`))
+
+            setPokeMoves(moves)
+
             setPokeData(data)
         }catch({message}){ 
             setPokeData(message)
@@ -92,6 +98,17 @@ function GetPoke() {
             ></img>
             <p> Pokemon's name: {pokeName} </p>
             <p> Pokemon's type: {JSON.stringify(pokeTypes)} </p>
+            <p> Pokemon's moves:</p>
+            <ul>
+                {pokeMoves.sort((a,b) => (a.move.name > b.move.name) ? 1 : ((b.move.name > a.move.name) ? -1 : 0)).map((move, i) => (
+                    <li key={i}>{move.move.name}</li>
+                ))}
+
+                
+            </ul>
+            
+            
+            
             <p> {JSON.stringify(pokeDesc)} </p>
             <p>{JSON.stringify(pokeData, null, 2)}</p>
             
