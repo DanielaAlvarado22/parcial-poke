@@ -10,16 +10,13 @@ function GetPoke() {
     const [poke, setPoke] = useState('')
     const [pokeName, setPokeName] = useState('...')
     const [pokeImg, setPokeImg] = useState(pokeball)
-<<<<<<< Updated upstream
     const [pokeMoves, setPokeMoves] = useState([])
-=======
     const [pokeDesc, setPokeDesc] = useState('...')
     const [pokeTypes, setPokeTypes] = useState([])
     //const [noDamage, setNoDamage] = useState([])
     const [pokeTypeData, setPokeTypeData] = useState([])
     const [pokeType2Data, setPokeType2Data] = useState([])
     
->>>>>>> Stashed changes
     const id = useId
     
     const waitPlease = async (showError) => {
@@ -41,7 +38,6 @@ function GetPoke() {
             const {flavor_text} = flavor_text_entries.find(({language: {name}})=> name==='es')
             setPokeDesc(flavor_text)
 
-<<<<<<< Updated upstream
             const {data:{evolution_chain: {url: evo_url}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
             const {data} = await reqPokeApi.get(evo_url)
 
@@ -49,8 +45,7 @@ function GetPoke() {
 
             setPokeMoves(moves)
 
-            setPokeData(data)
-=======
+            
             //Obteniendo su tipo o tipos
             const {data: {types}} = await reqPokeApi.get(`/pokemon/${poke}`)
             if(types.length<2){
@@ -101,7 +96,6 @@ function GetPoke() {
             // const {data:{evolution_chain: {url: evo_url}}} = await reqPokeApi.get(`/pokemon-species/${poke}`)
             // const {data} = await reqPokeApi.get(evo_url)
             // setPokeData(data)
->>>>>>> Stashed changes
         }catch({message}){ 
             
             setPokeTypes()
@@ -148,7 +142,6 @@ function GetPoke() {
              <p> Pokemon's name: {pokeName} </p>
             <img src={pokeImg} alt='Pokemon sprite...'
             ></img>
-<<<<<<< Updated upstream
             <p> Pokemon's name: {pokeName} </p>
             <p> Pokemon's type: {JSON.stringify(pokeTypes)} </p>
             <p> Pokemon's moves:</p>
@@ -162,8 +155,6 @@ function GetPoke() {
             
             
             
-=======
->>>>>>> Stashed changes
             <p> {JSON.stringify(pokeDesc)} </p>
             <p> Pokemon's type: {JSON.stringify(pokeTypes)} </p>
             <fieldset>

@@ -1,19 +1,19 @@
 //import axios from 'axios';
 import React from 'react'
 import './App.css';
-import GetPoke from './pokePromise';
+import GetPoke from './pokePromiseJS';
 
 
 
 function App() { 
+  
   return (
     <div className="App">
-    
-        <p>
+      <code>
+        <pre>
           {GetPoke()}
-        </p>
-       
-      
+        </pre>
+      </code>
     </div>
   );
 }
